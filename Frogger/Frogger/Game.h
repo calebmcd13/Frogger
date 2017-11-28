@@ -17,6 +17,7 @@ public:
 
 	std::vector <std::vector<Vehicle*> > Game:: getTraffic();
 
+	void Game::updateTraffic(void);
 	
 };
 

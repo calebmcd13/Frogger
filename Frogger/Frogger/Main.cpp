@@ -54,7 +54,7 @@ void StartGameThread() {
 		//std::thread updateThread(Update_Traffic);
 		std::thread drawThread(Draw_All_Objects);
 
-		//updateThread.join();
+	//	updateThread.join();
 		drawThread.join();
 
 	//std::thread testDraw(Debug_Draw);
@@ -68,7 +68,7 @@ void StartGameThread() {
 void Draw_All_Objects() {
 	
 
-	//std::thread updateThread(Update_Traffic);
+	std::thread updateThread(Update_Traffic);
 
 
 	//open window
@@ -88,6 +88,7 @@ void Draw_All_Objects() {
 			}
 		}
 		
+		window.clear(sf::Color::White);
 
 		for (int i = 0; i < NUMBER_OF_LANES; i++) 
 		{
@@ -95,7 +96,6 @@ void Draw_All_Objects() {
 			for (int j = 0;  j < MAX_NUMBER_OF_VEHICLES; j++) 
 			{
 
-				window.clear(sf::Color::White);
 
 				traffic_mutex.lock();
 				//sf::RectangleShape rect = ((*game->getTraffic())[i][j]->getShape());
@@ -105,11 +105,13 @@ void Draw_All_Objects() {
 
 				window.draw(rectangle); //draw all the traffic 
 				traffic_mutex.unlock(); //release semaphore
-				window.display();
+				//window.display();
 
 			}
 
 		}
+		window.display();
+
 	
 
 		/*
@@ -127,7 +129,7 @@ void Draw_All_Objects() {
 		//rectangle.setPosition(car->getCenterX(), car->getCenterY());
 
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(40));
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 
 
@@ -150,16 +152,20 @@ void Update_Traffic() {
 				//position is the left most point I thinK????? CHECK
 				if (car->getShape()->getPosition().x > (WINDOW_MAX_X))
 				{
-					car->getShape()-> setOrigin(CAR_WIDTH_D2, car->getShape()->getPosition().y);
+					//car->getShape()-> setOrigin(CAR_WIDTH_D2, car->getShape()->getPosition().y);
 					car->getShape()->setPosition(CAR_WIDTH_D2, car->getShape()->getPosition().y);
 				}
 
-				else if (car->getShape()->getPosition().x + 2 * CAR_WIDTH_D2 < (WINDOW_MIN_X))
+				else if (car->getShape()->getPosition().x + CAR_WIDTH < (WINDOW_MIN_X))
 				{
-					car->getShape()->setOrigin(WINDOW_MAX_X - 2 * CAR_WIDTH_D2, car->getShape()->getPosition().y);
+					//car->getShape()->setOrigin(WINDOW_MAX_X - 2 * CAR_WIDTH_D2, car->getShape()->getPosition().y);
 					car->getShape()->setPosition(WINDOW_MAX_X - 2 * CAR_WIDTH_D2, car->getShape()->getPosition().y);
 				}
-				car->getShape()->move(car->getSpeed(), 0);
+				else
+				{
+					car->getShape()->move(car->getSpeed(), 0);
+
+				}
 				traffic_mutex.unlock(); //release semaphore
 			}
 
@@ -167,7 +173,7 @@ void Update_Traffic() {
 
 
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(60)); //NEEDS TO SLEEP LONGER THAN THE DRAW THREAD
+		std::this_thread::sleep_for(std::chrono::milliseconds(30)); //NEEDS TO SLEEP LONGER THAN THE DRAW THREAD
 	}
 
 }

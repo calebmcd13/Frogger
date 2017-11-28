@@ -20,7 +20,7 @@
 /*
 	defines for frog (will probably be changed)
 */
-#define FROG_SIZE (15)
+#define FROG_SIZE (20)
 #define FROG_SIZE_D2 (FROG_SIZE >> 1)
 
 
@@ -30,7 +30,7 @@
 */
 
 #define VEHICLE_LENGTH FROG_SIZE //so that vehicle length and frog size are equal
-#define CAR_WIDTH 6
+#define CAR_WIDTH 30
 #define CAR_WIDTH_D2 (CAR_WIDTH>>1)
 
 #define BUS_WIDTH 10
@@ -40,7 +40,7 @@
 
 #define MIN_SPACE_BETWEEN_VEHICLES (FROG_SIZE + 6) //minimum space between vehicles
 
-#define NUMBER_OF_LANES ((int)(WINDOW_MAX_Y/VEHICLE_LENGTH - 2*FROG_SIZE))
+#define NUMBER_OF_LANES ((int)(20))
 
 #define SPACE_BETWEEN_LANES (FROG_SIZE)
 

@@ -11,16 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\Projects\SFMLPractice\SFMLPractice\Car.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\Projects\SFMLPractice\SFMLPractice\Game.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\Projects\SFMLPractice\SFMLPractice\Main.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\Projects\SFMLPractice\SFMLPractice\Vehicle.cpp" />
+    <ClCompile Include="Car.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Vehicle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\Projects\SFMLPractice\SFMLPractice\Arena.h" />
-    <ClInclude Include="..\..\..\..\..\..\Projects\SFMLPractice\SFMLPractice\car.h" />
-    <ClInclude Include="..\..\..\..\..\..\Projects\SFMLPractice\SFMLPractice\Game.h" />
-    <ClInclude Include="..\..\..\..\..\..\Projects\SFMLPractice\SFMLPractice\Vehicle.h" />
+    <ClInclude Include="Arena.h" />
+    <ClInclude Include="car.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Vehicle.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

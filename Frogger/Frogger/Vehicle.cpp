@@ -20,7 +20,7 @@ Vehicle::Vehicle(int centerX, int centerY, int speed, int size_d2, sf::Color col
 	this->speed = speed;
 	//this->width_d2 = size_d2;
 
-	this->shape->setOrigin(centerX, centerY);
+	//this->shape->setOrigin(centerX, centerY);
 	this->shape->setPosition(centerX, centerY);
 
 	this->shape->setFillColor(color);

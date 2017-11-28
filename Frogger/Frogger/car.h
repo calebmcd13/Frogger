@@ -15,6 +15,8 @@ public:
 
 	Car();
 	Car(int centerX, int centerY, int speed, sf::Color color);
+
+
 };
 
 #endif
