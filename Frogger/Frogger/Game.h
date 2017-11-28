@@ -10,9 +10,13 @@
 class Game {
 
 private:
+	
+	Frog *frog;
 
 	std::vector<std::vector<Vehicle*> > traffic;
-	Frog *frog;
+	sf::RenderWindow *window;
+
+	bool endOfGame;
 
 public:
 	Game();
@@ -21,6 +25,16 @@ public:
 
 	Frog* Game:: getFrog();
 	
+	bool did_game_end();
+	void setEndOfGame(bool endOfGame);
+
+	sf::RenderWindow* getWindow();
+	//collision detection
+	bool detectLeftCollision();
+	bool detectRightCollision();
+	bool detectUpCollision();
+	bool detectBottomCollision();
+
 
 };
 

@@ -40,7 +40,7 @@
 
 #define MIN_SPACE_BETWEEN_VEHICLES (FROG_SIZE + 6) //minimum space between vehicles
 
-#define NUMBER_OF_LANES ((int)(30))
+#define NUMBER_OF_LANES ((int)(WINDOW_MAX_Y/VEHICLE_LENGTH) - 2)
 
 #define SPACE_BETWEEN_LANES (FROG_SIZE)
 

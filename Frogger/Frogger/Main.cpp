@@ -16,6 +16,8 @@ void Update_Traffic();
 
 void Update_Frog();
 
+void End_Game();
+
 void Debug_Draw();
 /**************************** Global Variables *******************************/
 
@@ -29,6 +31,9 @@ std::mutex traffic_mutex; //mutex semaphore for traffic array
 
 std::mutex frog_mutex; //mutex semaphore for frog (might need)
 
+std::mutex endOfGame_mutex;
+
+std::mutex window_mutex;
 /******************************** semaphores *********************************/
 
 
@@ -55,6 +60,7 @@ void StartGameThread() {
 
 	game = new Game();
 
+	game->getWindow()->setActive(false);
 		//std::thread updateThread(Update_Traffic);
 		std::thread drawThread(Draw_All_Objects);
 
@@ -76,23 +82,22 @@ void Draw_All_Objects() {
 	std::thread frogThread(Update_Frog);
 
 	//open window
-	sf::RenderWindow window(sf::VideoMode(WINDOW_MAX_X, WINDOW_MAX_Y),
-							"Frogger",
-							sf::Style::Default);
-	window.setActive(true);
-	window.setFramerateLimit(60); //60 fps
-	while (window.isOpen()) {
+
+	game->getWindow()->setActive(true);
+	game->getWindow()->setFramerateLimit(60); //60 fps
+	while (game->getWindow()->isOpen()) {
 
 		sf::Event event;
-		while (window.pollEvent(event)) {
+		window_mutex.lock();
+		while (game->getWindow()->pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 			{
-				window.close();
+				game->getWindow()->close();
 			}
 		}
 		
-		window.clear(sf::Color::White);
-
+		game->getWindow()->clear(sf::Color::White);
+		window_mutex.unlock();
 		for (int i = 0; i < NUMBER_OF_LANES; i++) 
 		{
 
@@ -106,7 +111,10 @@ void Draw_All_Objects() {
 				Vehicle *specificVehicle = Vehicles.at(j);
 				sf::RectangleShape rectangle = *specificVehicle->getShape();
 
-				window.draw(rectangle); //draw all the traffic 
+				window_mutex.lock();
+				game->getWindow()->draw(rectangle); //draw all the traffic 
+				window_mutex.unlock();
+				
 				traffic_mutex.unlock(); //release semaphore
 				//window.display();
 
@@ -117,9 +125,9 @@ void Draw_All_Objects() {
 
 		//draw frog
 		frog_mutex.lock();
-		window.draw(*game->getFrog()->getShape());
+		game->getWindow()->draw(*game->getFrog()->getShape());
 		frog_mutex.unlock();
-		window.display();
+		game->getWindow()->display();
 
 	
 
@@ -180,8 +188,6 @@ void Update_Traffic() {
 
 		}
 
-
-
 		std::this_thread::sleep_for(std::chrono::milliseconds(20)); //NEEDS TO SLEEP LONGER THAN THE DRAW THREAD
 	}
 
@@ -190,51 +196,80 @@ void Update_Traffic() {
 //check for collisions in this thread
 void Update_Frog()
 {
-
 	while (1)
 	{
-
+		endOfGame_mutex.lock();
 		frog_mutex.lock();
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		{
+			//game->setEndOfGame(game->detectLeftCollision());
+			if (game->did_game_end())
+			{
+				break;
+			}
+			
 			game->getFrog()->moveLeft();
-			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(70));
 
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
+
+			//game->setEndOfGame(game->detectRightCollision());
+			if (game->did_game_end())
+			{
+				break;
+			}
 			game->getFrog()->moveRight();
-			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+			std::this_thread::sleep_for(std::chrono::milliseconds(70));
 
 
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 		{
+			//game->setEndOfGame(game->detectUpCollision());
+			if (game->did_game_end())
+			{
+				break;
+			}
 			game->getFrog()->moveUp();
-			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+			game->getFrog()->decrementLane();
 
-
+			std::this_thread::sleep_for(std::chrono::milliseconds(70));
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 		{
+			//game->setEndOfGame(game->detectBottomCollision());
+			if (game->did_game_end())
+			{
+				break;
+			}
 			game->getFrog()->moveDown();
-			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+			game->getFrog()->incrementLane();
 
+			std::this_thread::sleep_for(std::chrono::milliseconds(70));
+			
 
 		}
 
 
 		frog_mutex.unlock();
 
-
+		endOfGame_mutex.unlock();
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(20));
 	}
 
+	std::thread endGame(End_Game);
+	
+}
+
+void End_Game()
+{
 
 
 }
-
 
 void Debug_Draw()
 {
