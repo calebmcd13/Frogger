@@ -5,20 +5,23 @@
 #include "Arena.h"
 #include "Car.h"
 #include <vector>
+#include "Frog.h"
 
 class Game {
 
 private:
 
 	std::vector<std::vector<Vehicle*> > traffic;
+	Frog *frog;
 
 public:
 	Game();
 
 	std::vector <std::vector<Vehicle*> > Game:: getTraffic();
 
-	void Game::updateTraffic(void);
+	Frog* Game:: getFrog();
 	
+
 };
 
 

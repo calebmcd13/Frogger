@@ -14,6 +14,8 @@ void Draw_All_Objects();
 
 void Update_Traffic();
 
+void Update_Frog();
+
 void Debug_Draw();
 /**************************** Global Variables *******************************/
 
@@ -24,6 +26,8 @@ Game *game;
 //Vehicle **traffic[NUMBER_OF_LANES][MAX_NUMBER_OF_VEHICLES]; //array of all vehicles and lanes corresponding to those vehicles
 
 std::mutex traffic_mutex; //mutex semaphore for traffic array 
+
+std::mutex frog_mutex; //mutex semaphore for frog (might need)
 
 /******************************** semaphores *********************************/
 
@@ -69,7 +73,7 @@ void Draw_All_Objects() {
 	
 
 	std::thread updateThread(Update_Traffic);
-
+	std::thread frogThread(Update_Frog);
 
 	//open window
 	sf::RenderWindow window(sf::VideoMode(WINDOW_MAX_X, WINDOW_MAX_Y),
@@ -83,7 +87,6 @@ void Draw_All_Objects() {
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 			{
-
 				window.close();
 			}
 		}
@@ -110,6 +113,12 @@ void Draw_All_Objects() {
 			}
 
 		}
+
+
+		//draw frog
+		frog_mutex.lock();
+		window.draw(*game->getFrog()->getShape());
+		frog_mutex.unlock();
 		window.display();
 
 	
@@ -173,11 +182,58 @@ void Update_Traffic() {
 
 
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(30)); //NEEDS TO SLEEP LONGER THAN THE DRAW THREAD
+		std::this_thread::sleep_for(std::chrono::milliseconds(20)); //NEEDS TO SLEEP LONGER THAN THE DRAW THREAD
 	}
 
 }
 
+//check for collisions in this thread
+void Update_Frog()
+{
+
+	while (1)
+	{
+
+		frog_mutex.lock();
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		{
+			game->getFrog()->moveLeft();
+			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		{
+			game->getFrog()->moveRight();
+			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		{
+			game->getFrog()->moveUp();
+			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+		{
+			game->getFrog()->moveDown();
+			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+
+		}
+
+
+		frog_mutex.unlock();
+
+
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
+	}
+
+
+
+}
 
 
 void Debug_Draw()

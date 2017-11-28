@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include "Frog.h"
 
 Game::Game()
 {
@@ -26,13 +26,19 @@ Game::Game()
 		{
 			
 			int differential = (rand() % 10) + 1;
-			traffic[i].push_back(new Car((j+1)+differential, i*FROG_SIZE + 2, speed, sf::Color::Black)); //2 is wiggle room
+			traffic[i].push_back(new Car((j+1)+differential, (i+1)*FROG_SIZE , speed, sf::Color::Black)); //2 is wiggle room
 			traffic[i][j]->setLane(i);
 			traffic[i][j]->setSpeed(speed);
 
 		}
 	}
+
+	frog = new Frog(); //create new frog 
+
 }
+
+
+
 
 
 std::vector<std::vector<Vehicle*> > Game :: getTraffic()
@@ -41,8 +47,8 @@ std::vector<std::vector<Vehicle*> > Game :: getTraffic()
 
 }
 
-
-void Game::updateTraffic(void)
+Frog* Game::getFrog()
 {
-
+	return frog;
 }
+
